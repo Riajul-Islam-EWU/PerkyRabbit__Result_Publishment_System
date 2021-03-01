@@ -46,7 +46,7 @@
             <div>
                 <h3 class="float-md-start mb-0">Perky Rabbit</h3>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
-                    <a class="nav-link active" aria-current="page" href="index.php">Home</a>
+                <a class="nav-link active" aria-current="page" href="index.php">Home</a>
                     <a class="nav-link" href="about_us.php">About Us</a>
                     <a class="nav-link" href="contact.php">Contact</a>
                 </nav>
@@ -54,7 +54,7 @@
         </header>
 
         <main class="px-3">
-            <h1>Serving Since 1971</h1>
+            <h1>Contact</h1>
             <p class="lead">Welcome to Perky Rabbit. Join our huge community</p>
             <p class="lead">
                 <a href="#" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Sign In</a>
