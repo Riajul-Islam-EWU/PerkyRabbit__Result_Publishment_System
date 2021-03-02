@@ -51,3 +51,7 @@ body {
   color: #fff;
   border-bottom-color: #fff;
 }
+
+[id*="log"]:hover {
+  class: btn-danger;
+}
