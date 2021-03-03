@@ -1,3 +1,17 @@
+<?php
+include("config.php");
+session_start();
+$username = $_SESSION['username'];
+$sql = "SELECT user_id, username, firstname, lastname, division FROM user_table WHERE username = '$username' LIMIT 1";
+$result = mysqli_query($db, $sql);
+$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+
+$compare = $row["division"];
+$test1 = "staff";
+$test2 = "teacher";
+$test3 = "student";
+?>
+
 <!DOCTYPE html>
 <html lang="en" class="h-100">
 
@@ -42,19 +56,22 @@
             <div>
                 <h3 class="float-md-start mb-0">Perky Rabbit</h3>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
+                    <?php
+                    if ($compare != $test3) {
+                        echo '<a class="nav-link" href="pending_request.php">Pending Request</a>';
+                    }
+                    ?>
                     <a class="nav-link active" aria-current="page" href="home.php">Home</a>
                     <a class="nav-link" href="about.php">About</a>
                     <a class="nav-link" href="contact.php">Contact</a>
+                    <a class="nav-link" href="logout.php">LOG OUT</a>
                 </nav>
             </div>
         </header>
 
         <main class="px-3">
-            <h1>Serving Since 1971</h1>
-            <p class="lead">Welcome to Perky Rabbit. Enter our huge community.</p>
-            <p class="lead">
-                <a href="logout.php" class="btn btn-lg btn-outline-secondary fw-bold border-white">LOG OUT</a>
-            </p>
+            <h1>We are here</h1>
+            <p class="lead">Welcome <span><?php echo $row["firstname"] . " " . $row["lastname"] ?></span> to Perky Rabbit community.</p>
         </main>
 
         <footer class="mt-auto text-white-50">

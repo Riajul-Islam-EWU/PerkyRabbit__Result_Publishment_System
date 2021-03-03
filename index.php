@@ -11,25 +11,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $count = mysqli_num_rows($result);
 
     // If mysqli_result matched $username and $password, table row must be 1 row
-    if ($count == 1) {
+    if ($count == 1 && $row["validity"] == "valid") {
         global $showmsg;
         $showmsg = "Login successful";
-        function showMsg()
-        {
-            echo "<h6><center>  </center></h6>";
-        }
 
         session_start();
         $_SESSION['username'] = $username;
         $_SESSION['success'] = "You are now logged in";
         header('location: home.php');
-    } else {
-        global $showmsg;
+    }
+    else if ($count == 1 && $row["validity"] == "pending") {
+        $showmsg = "Login failed. Contact authority for validation";
+    }
+    else {
         $showmsg = "Login failed. Invalid username or password";
-        function showMsg()
-        {
-            echo "<h6><center>  </center></h6>";
-        }
     }
 }
 ?>

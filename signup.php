@@ -4,7 +4,8 @@ include("config.php");
 $firstname = "";
 $lastname = "";
 $username = "";
-$email    = "";
+$division = "";
+$email = "";
 $password_1 = "";
 $password_2 = "";
 $test1 = "";
@@ -17,6 +18,7 @@ if (isset($_POST['signup'])) {
     $firstname = mysqli_real_escape_string($db, $_POST['firstname']);
     $lastname = mysqli_real_escape_string($db, $_POST['lastname']);
     $username = mysqli_real_escape_string($db, $_POST['username']);
+    $division = mysqli_real_escape_string($db, $_POST['division']);
     $email = mysqli_real_escape_string($db, $_POST['email']);
     $password_1 = mysqli_real_escape_string($db, $_POST['password_1']);
     $password_2 = mysqli_real_escape_string($db, $_POST['password_2']);
@@ -62,13 +64,23 @@ if (isset($_POST['signup'])) {
     if (count($errors) == 0) {
         $password = $password_1; //encrypt the password before saving in the database
 
-        $query = "INSERT INTO user_table (firstname, lastname, username, email, password) 
-  			  VALUES('$firstname', '$lastname', '$username', '$email', '$password')";
-        mysqli_query($db, $query);
-        session_start();
-        $_SESSION['username'] = $username;
-        $_SESSION['success'] = "You are now logged in";
-        header('location: index.php');
+        if ($division == 'student') {
+            $query = "INSERT INTO user_table (firstname, lastname, username, division, email, password, validity) 
+  			  VALUES('$firstname', '$lastname', '$username', '$division', '$email', '$password', 'pending')";
+            mysqli_query($db, $query);
+            session_start();
+            $_SESSION['username'] = $username;
+            $_SESSION['success'] = "You are now logged in";
+            header('location: index.php');
+        } else {
+            $query = "INSERT INTO user_table (firstname, lastname, username, division, email, password, validity) 
+  			  VALUES('$firstname', '$lastname', '$username', '$division', '$email', '$password', 'valid')";
+            mysqli_query($db, $query);
+            session_start();
+            $_SESSION['username'] = $username;
+            $_SESSION['success'] = "You are now logged in";
+            header('location: index.php');
+        }
     }
 }
 ?>
@@ -108,8 +120,9 @@ if (isset($_POST['signup'])) {
                 <div class="container">
                     <div class="row justify-content-md-center my-2">
                         <div class="col-md-10 form-group">
-                            <select class="form-control" id="select" required>
+                            <select class="form-control" id="division" name="division" required>
                                 <option value="" selected disabled>Please Select Division</option>
+                                <option value="staff">Staff</option>
                                 <option value="teacher">Teacher</option>
                                 <option value="student">Student</option>
                             </select>
@@ -119,6 +132,7 @@ if (isset($_POST['signup'])) {
                 <input type="password" id="password1" name="password_1" placeholder="Type Password" required>
                 <input type="password" id="password2" name="password_2" placeholder="Retype Password" required>
                 <input type="submit" id="signup" name="signup" value="SIGN UP"><br>
+                <p>After successful registration you will be directed to LOG IN page</p>
             </form>
 
             <!-- Register -->

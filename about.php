@@ -45,6 +45,7 @@
                     <a class="nav-link" aria-current="page" href="home.php">Home</a>
                     <a class="nav-link active" href="about.php">About</a>
                     <a class="nav-link" href="contact.php">Contact</a>
+                    <a class="nav-link" href="logout.php">LOG OUT</a>
                 </nav>
             </div>
         </header>
