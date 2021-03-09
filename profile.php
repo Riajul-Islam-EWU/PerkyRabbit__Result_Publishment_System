@@ -2,14 +2,20 @@
 include("config.php");
 session_start();
 $username = $_SESSION['username'];
-$sql = "SELECT user_id, username, firstname, lastname, division FROM user_table WHERE username = '$username' LIMIT 1";
+$sql = "SELECT * FROM user_table WHERE username = '$username' LIMIT 1";
 $result = mysqli_query($db, $sql);
 $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-
-$compare = $row["division"];
-$test1 = "staff";
-$test2 = "teacher";
-$test3 = "student";
+$test_id = $row["user_id"];
+$test_id= 7;
+$sql2 = "SELECT * FROM student_table WHERE student_user_id = '$test_id' LIMIT 1";
+$result2 = mysqli_query($db, $sql2);
+$row2 = mysqli_fetch_array($result2, MYSQLI_ASSOC);
+$value_fathername = $row2["father_name"];
+$value_mothername = $row2["mother_name"];
+$value_contactnumber = $row2["contact_number"];
+$value_address = $row2["address"];
+$value_class = $row2["class"];
+$value_birthdate = $row2["birth_date"];
 ?>
 
 <!DOCTYPE html>
@@ -52,29 +58,38 @@ $test3 = "student";
 <body class="d-flex h-100 text-center text-white bg-dark">
 
     <div class="cover-container-fluid d-flex w-100 h-100 p-3 mx-auto flex-column">
-        <header class="mb-auto">
+        <header class="mb-5">
             <div>
                 <h3 class="float-md-start mb-0">Perky Rabbit</h3>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
                     <a class="nav-link active" aria-current="page" href="home.php">Home</a>
-                    <a class="nav-link" href="about.php">About</a>
-                    <a class="nav-link" href="contact.php">Contact</a>
-                    <?php
-                    if ($compare != $test3) {
-                        echo '<a class="nav-link" href="pending_request.php">Pending Request</a>';
-                        echo '<a class="nav-link" href="manage_questionnaire.php">Manage Questionnaire</a>';
-                    } else {
-                        echo '<a class="nav-link" href="profile.php">Profile</a>';
-                    }
-                    ?>
                     <a class="nav-link" href="logout.php">LOG OUT</a>
                 </nav>
             </div>
         </header>
 
         <main class="px-3">
-            <h1>We are here</h1>
-            <p class="lead">Welcome <span><?php echo $row["firstname"] . " " . $row["lastname"] ?></span> to Perky Rabbit community.</p>
+            <div class="container">
+                <table class=" table table-bordered table-light table-hover table-striped">
+                    <tr>
+                        <th>Father's Name</th>
+                        <th>Mother's Name</th>
+                        <th>Contact Number</th>
+                        <th>Address</th>
+                        <th>Class</th>
+                        <th>Birth Date</th>
+                    </tr>
+                            <tr>
+                                <td><?php echo $value_fathername ?></td>
+                                <td><?php echo $value_mothername ?></td>
+                                <td><?php echo $value_contactnumber ?></td>
+                                <td><?php echo $value_address ?></td>
+                                <td><?php echo $value_class ?></td>
+                                <td><?php echo $value_birthdate ?></td>
+                            </tr>
+                        
+                </table>
+            </div>
         </main>
 
         <footer class="mt-auto text-white-50">
@@ -82,6 +97,9 @@ $test3 = "student";
         </footer>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/sweetalert.min.js"></script>
 </body>
 
 </html>

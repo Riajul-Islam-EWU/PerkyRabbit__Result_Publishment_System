@@ -1,5 +1,6 @@
 <?php
 include("config.php");
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $username = mysqli_real_escape_string($db, $_POST['username']);
@@ -19,11 +20,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['username'] = $username;
         $_SESSION['success'] = "You are now logged in";
         header('location: home.php');
-    }
-    else if ($count == 1 && $row["validity"] == "pending") {
+    } else if ($count == 1 && $row["validity"] == "pending") {
         $showmsg = "Login failed. Contact authority for validation";
-    }
-    else {
+    } else {
         $showmsg = "Login failed. Invalid username or password";
     }
 }
@@ -89,8 +88,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 
-    <script src="js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/sweetalert.min.js"></script>
+
+    <?php
+    session_start();
+    if ($_SESSION['msg'] == "signupdoneforstudent") {
+    ?>
+        <script>
+            swal("SIGN UP COMPLETE!", "Contact Authority for Validation!", "success");
+        </script>
+    <?php
+        session_destroy();
+    } else if ($_SESSION['msg'] == "signupdone") {
+    ?>
+        <script>
+            swal("SIGN UP COMPLETE!", "Please LOG IN Now!", "success");
+        </script>
+    <?php
+
+    }
+
+    ?>
 </body>
 
 </html>

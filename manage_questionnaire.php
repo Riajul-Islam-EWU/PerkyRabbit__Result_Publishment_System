@@ -1,3 +1,7 @@
+<?php
+include("config.php");
+?>
+
 <!DOCTYPE html>
 <html lang="en" class="h-100">
 
@@ -5,7 +9,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perky Rabbit RPS</title>
+    <title>RPS - Manage Subjects </title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -38,21 +42,39 @@
 <body class="d-flex h-100 text-center text-white bg-dark">
 
     <div class="cover-container-fluid d-flex w-100 h-100 p-3 mx-auto flex-column">
-        <header class="mb-auto">
+        <header class="mb-5">
             <div>
                 <h3 class="float-md-start mb-0">Perky Rabbit</h3>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
-                    <a class="nav-link" aria-current="page" href="home.php">Home</a>
-                    <a class="nav-link active" href="about.php">About</a>
-                    <a class="nav-link" href="contact.php">Contact</a>
+                    <a class="nav-link active" aria-current="page" href="home.php">Home</a>
                     <a class="nav-link" href="logout.php">LOG OUT</a>
                 </nav>
             </div>
         </header>
 
         <main class="px-3">
-            <h1>About</h1>
-            <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis, quam, ab obcaecati id aliquid, ullam et tempora dolorem vitae iusto at dolorum. Maxime quisquam sed, totam ipsum illo odit possimus?</p>
+            <div class="container m-5 p-3"><label for="select_subject">Select Subject to Create Questionnaire</label>
+                <form action="" method="POST" class="d-flex justify-content-around">
+                
+                    <select class="form-control m-2" name="select_subject" required>
+                        <option value="" selected disabled>Please Select Subject</option>
+                        <?php
+                        $sql = "SELECT * From subjects WHERE status = 'active'";
+                        $result = mysqli_query($db, $sql);
+                        while ($row = mysqli_fetch_array($result)) {
+                            echo "<option value=" . $row['subject_name'] . ">" . $row['subject_name'] . "</option>";
+                        }
+                        ?>
+                    </select>                    
+
+                    <input class="btn btn-success m-2" type="submit" name="btnsubmit">
+                </form>
+            </div>
+            <?php
+            if (isset($_POST['btnsubmit'])) {
+                header('location: questionnaire.php');
+            }
+            ?>
         </main>
 
         <footer class="mt-auto text-white-50">
@@ -60,6 +82,9 @@
         </footer>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/sweetalert.min.js"></script>
 </body>
 
 </html>

@@ -1,22 +1,6 @@
 <?php
 include("config.php");
 session_start();
-$username = $_SESSION['username'];
-$test1 = "staff";
-$test2 = "teacher";
-$test3 = "student";
-?>
-<?php
-global $notification;
-if (isset($_GET['update'])) {
-    $value_username = $_GET['update'];
-    $sql = "UPDATE user_table SET validity = 'valid' WHERE username = '$value_username'";
-    $updatequery = mysqli_query($db, $sql);
-    $notification = $updatequery;
-    if ($updatequery) {
-        $notification = "update done";
-    }
-}
 ?>
 
 <!DOCTYPE html>
@@ -50,6 +34,10 @@ if (isset($_GET['update'])) {
                 font-size: 3.5rem;
             }
         }
+
+        .table td {
+            text-align: center;
+        }
     </style>
 
     <!-- Custom styles for this template -->
@@ -58,7 +46,7 @@ if (isset($_GET['update'])) {
 
 <body class="d-flex h-100 text-center text-white bg-dark">
 
-    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <div class="cover-container-fluid d-flex w-100 h-100 p-3 mx-auto flex-column">
         <header class="mb-5">
             <div>
                 <h3 class="float-md-start mb-0">Perky Rabbit</h3>
@@ -71,7 +59,7 @@ if (isset($_GET['update'])) {
 
         <main class="px-3">
             <div class="container">
-                <table class=" table table-bordered table-dark">
+                <table class=" table table-bordered table-light table-hover table-striped">
                     <tr>
                         <th>Name</th>
                         <th>User Name</th>
@@ -87,12 +75,13 @@ if (isset($_GET['update'])) {
                             $value_lastname = $row["lastname"];
                             $value_username = $row["username"];
                             $value_validity = $row["validity"];
+                            $value_user_id = $row["user_id"];
                     ?>
                             <tr>
                                 <td><span><?php echo $value_firstname . " " . $value_lastname ?></span></td>
                                 <td><?php echo $value_username ?></td>
                                 <td><?php echo $value_validity ?></td>
-                                <td><a href="pending_request.php?update=<?php echo $value_username ?>" class="btn btn-success">Approve</a></td>
+                                <td><a href="pending_request.php?update=<?php echo $value_user_id ?>" class="btn btn-success">Approve</a></td>
                             </tr>
                         <?php
                         }
@@ -106,12 +95,6 @@ if (isset($_GET['update'])) {
                     ?>
                 </table>
             </div>
-            <?php
-            global $notification;
-            if ($notification) {
-                echo "update done";
-            }
-            ?>
         </main>
 
         <footer class="mt-auto text-white-50">
@@ -119,6 +102,30 @@ if (isset($_GET['update'])) {
         </footer>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/sweetalert.min.js"></script>
+    <?php
+    if (isset($_SESSION['msg']) && $_SESSION['msg'] == "updatedone") {
+    ?>
+        <script>
+            swal("Update Done!", "Student now able to LOG IN!", "success");
+        </script>
+    <?php
+        unset($_SESSION['msg']);
+    }
+    ?>
+    <?php
+    if (isset($_GET['update'])) {
+        $value_user_id = $_GET['update'];
+        $sql = "UPDATE user_table SET validity = 'valid' WHERE user_id = '$value_user_id'";
+        $updatequery = mysqli_query($db, $sql);
+        if ($updatequery) {
+            $_SESSION['msg'] = "updatedone";
+            header('location: pending_request.php');
+        }
+    }
+    ?>
 </body>
 
 </html>

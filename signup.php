@@ -1,6 +1,9 @@
 <?php
 include("config.php");
 
+session_start();
+$_SESSION['msg'] = "";
+
 $firstname = "";
 $lastname = "";
 $username = "";
@@ -64,21 +67,21 @@ if (isset($_POST['signup'])) {
     if (count($errors) == 0) {
         $password = $password_1; //encrypt the password before saving in the database
 
+        // if ($division == 'student') {
+        //     $query = "INSERT INTO user_table (firstname, lastname, username, division, email, password, validity) 
+  		// 	  VALUES('$firstname', '$lastname', '$username', '$division', '$email', '$password', 'pending')";
+        //     mysqli_query($db, $query);
+        // }
         if ($division == 'student') {
-            $query = "INSERT INTO user_table (firstname, lastname, username, division, email, password, validity) 
-  			  VALUES('$firstname', '$lastname', '$username', '$division', '$email', '$password', 'pending')";
+            $query = "INSERT INTO student_table (father_name) VALUES('update name')";
             mysqli_query($db, $query);
-            session_start();
-            $_SESSION['username'] = $username;
-            $_SESSION['success'] = "You are now logged in";
+            $_SESSION['msg'] = "signupdoneforstudent";
             header('location: index.php');
         } else {
             $query = "INSERT INTO user_table (firstname, lastname, username, division, email, password, validity) 
   			  VALUES('$firstname', '$lastname', '$username', '$division', '$email', '$password', 'valid')";
             mysqli_query($db, $query);
-            session_start();
-            $_SESSION['username'] = $username;
-            $_SESSION['success'] = "You are now logged in";
+            $_SESSION['msg'] = "signupdone";
             header('location: index.php');
         }
     }
@@ -132,7 +135,6 @@ if (isset($_POST['signup'])) {
                 <input type="password" id="password1" name="password_1" placeholder="Type Password" required>
                 <input type="password" id="password2" name="password_2" placeholder="Retype Password" required>
                 <input type="submit" id="signup" name="signup" value="SIGN UP"><br>
-                <p>After successful registration you will be directed to LOG IN page</p>
             </form>
 
             <!-- Register -->
@@ -144,9 +146,9 @@ if (isset($_POST['signup'])) {
             </div>
         </div>
     </div>
-
-    <script src="js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/sweetalert.min.js"></script>
 </body>
 
 </html>
