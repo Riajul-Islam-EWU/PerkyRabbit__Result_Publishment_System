@@ -5,10 +5,13 @@ $username = $_SESSION['username'];
 $sql = "SELECT * FROM user_table WHERE username = '$username' LIMIT 1";
 $result = mysqli_query($db, $sql);
 $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+$value_firstname = $row['firstname'];
+$value_lastname = $row['lastname'];
 $test_id = $row["user_id"];
 $sql2 = "SELECT * FROM student_table WHERE student_user_id = '$test_id' LIMIT 1";
 $result2 = mysqli_query($db, $sql2);
 $row2 = mysqli_fetch_array($result2, MYSQLI_ASSOC);
+$value_id = $row2["student_user_id"];
 $value_fathername = $row2["father_name"];
 $value_mothername = $row2["mother_name"];
 $value_contactnumber = $row2["contact_number"];
@@ -71,7 +74,8 @@ $value_birthdate = $row2["birth_date"];
             <div class="container">
                 <table class=" table  table-light table-hover table-striped">
                     <tr>
-                        <th>Name</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
                         <th>Father's Name</th>
                         <th>Mother's Name</th>
                         <th>Contact Number</th>
@@ -81,14 +85,15 @@ $value_birthdate = $row2["birth_date"];
                         <th>Update Information</th>
                     </tr>
                     <tr>
-                        <td><?php echo $row['firstname'] . " " . $row['lastname'] ?></td>
-                        <td><?php echo $value_fathername ?></td>
-                        <td><?php echo $value_mothername ?></td>
-                        <td><?php echo $value_contactnumber ?></td>
-                        <td><?php echo $value_address ?></td>
-                        <td><?php echo $value_class ?></td>
-                        <td><?php echo $value_birthdate ?></td>
-                        <td><a href="profile_update.php" class="text-white btn btn-primary">Update</a></td>
+                        <td><input type="text" class="form-control" name="firstname" value="<?php echo $value_firstname ?>"></td>
+                        <td><input type="text" class="form-control" name="lastname" value="<?php echo $value_lastname ?>"></td>
+                        <td><input type="text" class="form-control" name="fathername" value="<?php echo $value_fathername ?>"></td>
+                        <td><input type="text" class="form-control" name="mothername" value="<?php echo $value_mothername ?>"></td>
+                        <td><input type="text" class="form-control" name="contactnumber" value="<?php echo $value_contactnumber ?>"></td>
+                        <td><input type="text" class="form-control" name="address" value="<?php echo $value_address ?>"></td>
+                        <td><input type="text" class="form-control" name="class" value="<?php echo $value_class ?>"></td>
+                        <td><input type="text" class="form-control" name="birthdate" value="<?php echo $value_birthdate ?>"></td>
+                        <td><a href="profile_update.php?update=<?php echo $value_id ?>" class="text-white btn btn-primary">Update</a></td>
                     </tr>
 
                 </table>
@@ -103,6 +108,26 @@ $value_birthdate = $row2["birth_date"];
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/sweetalert.min.js"></script>
+
+    <?php
+    if (isset($_POST['update'])) {
+        $update_id = $_POST['update'];
+        $update_firstname = $_POST['firstname'];
+        $update_lastname = $_POST['lastname'];
+        $update_fathername = $_POST["father_name"];
+        $update_mothername = $_POST["mother_name"];
+        $update_contactnumber = $_POST["contact_number"];
+        $update_address = $_POST["address"];
+        $update_class = $_POST["class"];
+        $update_birthdate = $_POST["birth_date"];
+        $sql1 = "UPDATE user_table SET firstname = '$update_firstname' WHERE user_id = '$update_id'";
+        mysqli_query($db, $sql1);
+        // $sql2 = "UPDATE student_table SET firstname = 'valid' WHERE user_id = '$update_id'";
+        // mysqli_query($db, $sql2);
+
+        // header('location: pending_request.php');
+    }
+    ?>
 </body>
 
 </html>

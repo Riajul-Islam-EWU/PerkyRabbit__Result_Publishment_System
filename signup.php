@@ -67,14 +67,20 @@ if (isset($_POST['signup'])) {
     if (count($errors) == 0) {
         $password = $password_1; //encrypt the password before saving in the database
 
-        // if ($division == 'student') {
-        //     $query = "INSERT INTO user_table (firstname, lastname, username, division, email, password, validity) 
-  		// 	  VALUES('$firstname', '$lastname', '$username', '$division', '$email', '$password', 'pending')";
-        //     mysqli_query($db, $query);
-        // }
         if ($division == 'student') {
-            $query = "INSERT INTO student_table (father_name) VALUES('update name')";
+            $query = "INSERT INTO user_table (firstname, lastname, username, division, email, password, validity) 
+        	  VALUES('$firstname', '$lastname', '$username', '$division', '$email', '$password', 'pending')";
             mysqli_query($db, $query);
+
+            $user_id_query = "SELECT * FROM user_table WHERE username='$username' LIMIT 1";
+            $result_id = mysqli_query($db, $user_id_query);
+            $user_id = mysqli_fetch_array($result_id, MYSQLI_ASSOC);
+            $useid = $user_id["user_id"];
+
+            $query2 = "INSERT INTO student_table (student_id, student_user_id, father_name, mother_name, contact_number, address, class, birth_date) 
+  			  VALUES('NULL', '$useid', 'update name', 'update name', '12345', 'update address', '1', '2020-01-01')";
+            mysqli_query($db, $query2);
+
             $_SESSION['msg'] = "signupdoneforstudent";
             header('location: index.php');
         } else {
