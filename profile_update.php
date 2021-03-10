@@ -34,6 +34,8 @@ $_SESSION['id'] = $value_id;
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
 
     <!-- Icons -->
     <link rel="icon" href="icon/Softkit_logo_32x32.png" sizes="32x32" type="image/png">
@@ -96,7 +98,9 @@ $_SESSION['id'] = $value_id;
                             <td><input type="text" class="form-control" name="contactnumber" value="<?php echo $value_contactnumber ?>"></td>
                             <td><input type="text" class="form-control" name="address" value="<?php echo $value_address ?>"></td>
                             <td><input type="text" class="form-control" name="class" value="<?php echo $value_class ?>"></td>
-                            <td><input type="text" class="form-control" name="birthdate" value="<?php echo $value_birthdate ?>"></td>
+                            <td>
+                                <p><input type="text" name="birthdate" class="form-control" id="datepicker"></p>
+                            </td>
                             <td><button type="submit" class="text-white btn btn-primary" name="btnupdate">Update</button></td>
                         </tr>
                     </table>
@@ -109,9 +113,15 @@ $_SESSION['id'] = $value_id;
         </footer>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/sweetalert.min.js"></script>
+    <script>
+        $(function() {
+            $("#datepicker").datepicker();
+        });
+    </script>
 </body>
 
 </html>
