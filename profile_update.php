@@ -1,14 +1,15 @@
 <?php
 include("config.php");
 session_start();
+$_SESSION['id'] = "";
 $username = $_SESSION['username'];
-$sql = "SELECT * FROM user_table WHERE username = '$username' LIMIT 1";
-$result = mysqli_query($db, $sql);
-$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-$value_firstname = $row['firstname'];
-$value_lastname = $row['lastname'];
-$test_id = $row["user_id"];
-$sql2 = "SELECT * FROM student_table WHERE student_user_id = '$test_id' LIMIT 1";
+$sql1 = "SELECT * FROM user_table WHERE username = '$username' LIMIT 1";
+$result1 = mysqli_query($db, $sql1);
+$row1 = mysqli_fetch_array($result1, MYSQLI_ASSOC);
+$value_firstname = $row1['firstname'];
+$value_lastname = $row1['lastname'];
+$user_id = $row1["user_id"];
+$sql2 = "SELECT * FROM student_table WHERE student_user_id = '$user_id' LIMIT 1";
 $result2 = mysqli_query($db, $sql2);
 $row2 = mysqli_fetch_array($result2, MYSQLI_ASSOC);
 $value_id = $row2["student_user_id"];
@@ -18,6 +19,7 @@ $value_contactnumber = $row2["contact_number"];
 $value_address = $row2["address"];
 $value_class = $row2["class"];
 $value_birthdate = $row2["birth_date"];
+$_SESSION['id'] = $value_id;
 ?>
 
 <!DOCTYPE html>
@@ -65,38 +67,40 @@ $value_birthdate = $row2["birth_date"];
                 <h3 class="float-md-start mb-0">Perky Rabbit</h3>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
                     <a class="nav-link active" aria-current="page" href="home.php">Home</a>
-                    <a class="nav-link" href="logout.php">LOG OUT</a>
+                    <a class="nav-link" aria-current="page" href="profile.php">Profile</a>
+                    <a class="nav-link" aria-current="page" href="logout.php">LOG OUT</a>
                 </nav>
             </div>
         </header>
 
         <main class="px-3">
             <div class="container">
-                <table class=" table  table-light table-hover table-striped">
-                    <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Father's Name</th>
-                        <th>Mother's Name</th>
-                        <th>Contact Number</th>
-                        <th>Address</th>
-                        <th>Class</th>
-                        <th>Birth Date</th>
-                        <th>Update Information</th>
-                    </tr>
-                    <tr>
-                        <td><input type="text" class="form-control" name="firstname" value="<?php echo $value_firstname ?>"></td>
-                        <td><input type="text" class="form-control" name="lastname" value="<?php echo $value_lastname ?>"></td>
-                        <td><input type="text" class="form-control" name="fathername" value="<?php echo $value_fathername ?>"></td>
-                        <td><input type="text" class="form-control" name="mothername" value="<?php echo $value_mothername ?>"></td>
-                        <td><input type="text" class="form-control" name="contactnumber" value="<?php echo $value_contactnumber ?>"></td>
-                        <td><input type="text" class="form-control" name="address" value="<?php echo $value_address ?>"></td>
-                        <td><input type="text" class="form-control" name="class" value="<?php echo $value_class ?>"></td>
-                        <td><input type="text" class="form-control" name="birthdate" value="<?php echo $value_birthdate ?>"></td>
-                        <td><a href="profile_update.php?update=<?php echo $value_id ?>" class="text-white btn btn-primary">Update</a></td>
-                    </tr>
-
-                </table>
+                <form action="profile.php" method="POST">
+                    <table class=" table  table-light table-hover table-striped">
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Father's Name</th>
+                            <th>Mother's Name</th>
+                            <th>Contact Number</th>
+                            <th>Address</th>
+                            <th>Class</th>
+                            <th>Birth Date</th>
+                            <th>Update Information</th>
+                        </tr>
+                        <tr>
+                            <td><input type="text" class="form-control" name="firstname" value="<?php echo $value_firstname ?>"></td>
+                            <td><input type="text" class="form-control" name="lastname" value="<?php echo $value_lastname ?>"></td>
+                            <td><input type="text" class="form-control" name="fathername" value="<?php echo $value_fathername ?>"></td>
+                            <td><input type="text" class="form-control" name="mothername" value="<?php echo $value_mothername ?>"></td>
+                            <td><input type="text" class="form-control" name="contactnumber" value="<?php echo $value_contactnumber ?>"></td>
+                            <td><input type="text" class="form-control" name="address" value="<?php echo $value_address ?>"></td>
+                            <td><input type="text" class="form-control" name="class" value="<?php echo $value_class ?>"></td>
+                            <td><input type="text" class="form-control" name="birthdate" value="<?php echo $value_birthdate ?>"></td>
+                            <td><button type="submit" class="text-white btn btn-primary" name="btnupdate">Update</button></td>
+                        </tr>
+                    </table>
+                </form>
             </div>
         </main>
 
@@ -108,26 +112,6 @@ $value_birthdate = $row2["birth_date"];
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/sweetalert.min.js"></script>
-
-    <?php
-    if (isset($_POST['update'])) {
-        $update_id = $_POST['update'];
-        $update_firstname = $_POST['firstname'];
-        $update_lastname = $_POST['lastname'];
-        $update_fathername = $_POST["father_name"];
-        $update_mothername = $_POST["mother_name"];
-        $update_contactnumber = $_POST["contact_number"];
-        $update_address = $_POST["address"];
-        $update_class = $_POST["class"];
-        $update_birthdate = $_POST["birth_date"];
-        $sql1 = "UPDATE user_table SET firstname = '$update_firstname' WHERE user_id = '$update_id'";
-        mysqli_query($db, $sql1);
-        // $sql2 = "UPDATE student_table SET firstname = 'valid' WHERE user_id = '$update_id'";
-        // mysqli_query($db, $sql2);
-
-        // header('location: pending_request.php');
-    }
-    ?>
 </body>
 
 </html>
