@@ -77,8 +77,8 @@ if (isset($_POST['signup'])) {
             $user_id = mysqli_fetch_array($result_id, MYSQLI_ASSOC);
             $useid = $user_id["user_id"];
 
-            $query2 = "INSERT INTO student_table (student_id, student_user_id, father_name, mother_name, contact_number, address, class, birth_date) 
-  			  VALUES('NULL', '$useid', 'update name', 'update name', '12345', 'update address', '1', '2020-01-01')";
+            $query2 = "INSERT INTO student_table (student_id, student_user_id, father_name, mother_name, contact_number, address, class, birth_date, profile_picture) 
+  			  VALUES('NULL', '$useid', 'update name', 'update name', '12345', 'update address', '1', '2020-01-01', 'image/default_propic.jpg')";
             mysqli_query($db, $query2);
 
             $_SESSION['msg'] = "signupdoneforstudent";

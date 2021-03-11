@@ -15,8 +15,8 @@ $value_contactnumber = $row2["contact_number"];
 $value_address = $row2["address"];
 $value_class = $row2["class"];
 $value_birthdate = $row2["birth_date"];
+$value_profilepicture = $row2["profile_picture"];
 ?>
-
 <!DOCTYPE html>
 <html lang="en" class="h-100">
 
@@ -48,6 +48,11 @@ $value_birthdate = $row2["birth_date"];
                 font-size: 3.5rem;
             }
         }
+
+        .propic {
+            height: 200px;
+            width: 200px;
+        }
     </style>
 
     <!-- Custom styles for this template -->
@@ -62,6 +67,7 @@ $value_birthdate = $row2["birth_date"];
                 <h3 class="float-md-start mb-0">Perky Rabbit</h3>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
                     <a class="nav-link active" aria-current="page" href="home.php">Home</a>
+                    <a class="nav-link" aria-current="page" href="profile_update.php">Update Info</a>
                     <a class="nav-link" href="logout.php">LOG OUT</a>
                 </nav>
             </div>
@@ -70,6 +76,9 @@ $value_birthdate = $row2["birth_date"];
         <main class="px-3">
             <div class="container">
                 <table class=" table  table-light table-hover table-striped">
+                    <div>
+                        <img src="<?php echo $value_profilepicture ?>" alt="Profile Picture Photo" class="propic img-thumbnail img-fluid rounded mx-auto d-block">
+                    </div><br>
                     <tr>
                         <th>Name</th>
                         <th>Father's Name</th>
@@ -78,7 +87,6 @@ $value_birthdate = $row2["birth_date"];
                         <th>Address</th>
                         <th>Class</th>
                         <th>Birth Date</th>
-                        <th>Update Information</th>
                     </tr>
                     <tr>
                         <td><?php echo $row['firstname'] . " " . $row['lastname'] ?></td>
@@ -88,9 +96,7 @@ $value_birthdate = $row2["birth_date"];
                         <td><?php echo $value_address ?></td>
                         <td><?php echo $value_class ?></td>
                         <td><?php echo $value_birthdate ?></td>
-                        <td><a href="profile_update.php" class="text-white btn btn-primary">Update</a></td>
                     </tr>
-
                 </table>
             </div>
         </main>
@@ -100,7 +106,8 @@ $value_birthdate = $row2["birth_date"];
         </footer>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/sweetalert.min.js"></script>
     <?php
@@ -111,26 +118,6 @@ $value_birthdate = $row2["birth_date"];
         </script>
     <?php
         unset($_SESSION['updatemsg']);
-    }
-    ?>
-
-    <?php
-    if (isset($_POST['btnupdate'])) {
-        $id = $_SESSION['id'];
-        $update_firstname = $_POST['firstname'];
-        $update_lastname = $_POST['lastname'];
-        $update_fathername = $_POST["fathername"];
-        $update_mothername = $_POST["mothername"];
-        $update_contactnumber = $_POST["contactnumber"];
-        $update_address = $_POST["address"];
-        $update_class = $_POST["class"];
-        $update_birthdate = $_POST["birthdate"];
-        $sql3 = "UPDATE user_table SET firstname = '$update_firstname', lastname = '$update_lastname' WHERE user_id = '$id'";
-        mysqli_query($db, $sql3);
-        $sql4 = "UPDATE student_table SET father_name = '$update_fathername', mother_name = '$update_mothername', contact_number = '$update_contactnumber', address = '$update_address', class = '$update_class', birth_date = '$update_birthdate' WHERE student_user_id = '$id'";
-        mysqli_query($db, $sql4);
-        $_SESSION['updatemsg'] = "updatedone";
-        header('location: profile.php');
     }
     ?>
 </body>
