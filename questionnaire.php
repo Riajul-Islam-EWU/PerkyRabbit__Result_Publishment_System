@@ -1,5 +1,48 @@
 <?php
 include("config.php");
+session_start();
+
+$totalquestions = $_SESSION['questionnumber'];
+$subject_code = $_SESSION['code'];
+$question_paper_id = $_SESSION['question_paper_id'];
+
+$sql1 = "SELECT * FROM subjects WHERE subject_code = '$subject_code' LIMIT 1";
+$result1 = mysqli_query($db, $sql1);
+$row1 = mysqli_fetch_array($result1);
+
+// Inserting data into Database
+if (isset($_POST['btn_submit_questionnaire'])) {
+
+    $question = $_POST['question'];
+    $answer = $_POST['answer'];
+    $countloop = count($question);
+    $option1 = $_POST['option1'];
+    $option2 = $_POST['option2'];
+    $option3 = $_POST['option3'];
+    $option4 = $_POST['option4'];
+
+    for ($i = 0; $i < $countloop; $i++) {
+        $send_question = $question[$i];
+        $send_answer = $answer[$i];
+        $query = "INSERT INTO questionnaire (question_paper_id, question, answer) VALUES ('$question_paper_id', '$send_question', '$send_answer')";
+        mysqli_query($db, $query);
+
+        $sql2 = "SELECT * FROM questionnaire WHERE question = '$send_question' LIMIT 1";
+        $result2 = mysqli_query($db, $sql2);
+        $row2 = mysqli_fetch_array($result2);
+        $question_id = $row2['id'];
+
+        $send_option1 = $option1[$i];
+        $send_option2 = $option2[$i];
+        $send_option3 = $option3[$i];
+        $send_option4 = $option4[$i];
+        $query1 = "INSERT INTO question_options (question_id, option_1, option_2, option_3, option_4) VALUES ('$question_id', '$send_option1', '$send_option2', '$send_option3', '$send_option4')";
+        mysqli_query($db, $query1);
+    }
+    $_SESSION['questionnaire_status'] = "created";
+    $_SESSION['question_paper_id_show'] = $question_paper_id;
+    header("Location: manage_questionnaire.php");
+}
 ?>
 
 <!DOCTYPE html>
@@ -47,244 +90,58 @@ include("config.php");
                 <h3 class="float-md-start mb-0">Perky Rabbit</h3>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
                     <a class="nav-link active" aria-current="page" href="home.php">Home</a>
+                    <a class="nav-link" href="manage_questionnaire.php">Manage Questionnaire</a>
                     <a class="nav-link" href="logout.php">LOG OUT</a>
                 </nav>
             </div>
         </header>
 
-        <main class="px-3">
-            <div class="container m-5 p-3">
-            <div class="container">
-    <div class="col-md-2">
-    </div>
-    <div class="col-md-8">
-        <div class="card ">
-            <div class="card-header">Personal Info</div>
-            <div class="card-block">
-                Gender:
-                <br />
-                <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-secondary">
-                        <input type="radio" autocomplete="off" /> Male
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input type="radio" autocomplete="off" /> Female
-                    </label>
-                </div>
-                <br />
-                <br />
+        <main>
+            <form action="" method="POST" id="form1">
+                <h3 class="justify-content-md-center">Make Qustionnaire for <?php echo $row1['subject_name']; ?></h3>
+                <?php
+                $counter = 0;
+                for ($i = 0; $totalquestions > $i; $i++) { ?>
+                    <div class="container border border-info rounded">
+                        <div class="row">
+                            <div class="col"><br>
+                                <label for="textarea" class="bg-success p-2 rounded">
+                                    <h4>Question: <?php echo ++$counter; ?></h4>
+                                </label><br> <br>
+                                <textarea type="text" class="form-control" name="question[]" placeholder="Type question here..." required></textarea><br>
+                            </div>
+                        </div>
 
-                Age Group:
-                <br />
-                <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-secondary">
-                        <input type="radio" autocomplete="off" />Under 18
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input type="radio" autocomplete="off" />18-25
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input type="radio" autocomplete="off" />25-50
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input type="radio" autocomplete="off" />Over 50
-                    </label>
-                </div>
-                <br />
-                <br />
-            </div>
-        </div>
+                        <div class="row">
 
-        <div class="card ">
-            <div class="card-header">Experience Rating</div>
-            <div class="card-block">
-                <div class="row">
-                    <div class="col-md-2 col-sm-2 col-xs-5">
-                        <span style="font-size:22px;">Stay:</span>
-                    </div>
-                    <div class="col-md-10 col-sm-10 col-xs-7">
-                        <div id="rate1" style="margin-top:6px;"></div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2 col-sm-2 col-xs-5">
-                        <span style="font-size:22px;">Food:</span>
-                    </div>
-                    <div class="col-md-10 col-sm-10 col-xs-7">
-                        <div id="rate2" style="margin-top:6px;"></div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2 col-sm-2 col-xs-5">
-                        <span style="font-size:22px;">Service:</span>
-                    </div>
-                    <div class="col-md-10 col-sm-10 col-xs-7">
-                        <div id="rate3" style="margin-top:6px;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card ">
-            <div class="card-header">Travel Satisfaction</div>
-            <div class="card-block">
-                <div class="row">
-                    <div class="col-md-2 col-sm-2 col-xs-12">
-                        <span style="font-size:22px;">Travel:</span>
-                    </div>
-                    <div class="col-md-1 col-sm-1 col-xs-2 text-xs-center">
-                        <button id="decrease1" style="width:100%; max-width:35px;">-</button>
-                    </div>
-                    <div class="col-md-8 col-sm-8 col-xs-8">
-                        <div style="width:100%;" id="progress1"></div>
-                    </div>
-                    <div class="col-md-1 col-sm-1 col-xs-2 text-xs-center">
-                        <button id="increase1" style="width:100%; max-width:35px;">+</button>
-                    </div>
-                </div>
-                <div class="clearfix"><br /></div>
-                <div class="row">
-                    <div class="col-md-2 col-sm-2 col-xs-12">
-                        <span style="font-size:22px;">Transfer:</span>
-                    </div>
-                    <div class="col-md-1 col-sm-1 col-xs-2 text-xs-center">
-                        <button id="decrease2" style="width:100%; max-width:35px;">-</button>
-                    </div>
-                    <div class="col-md-8 col-sm-8 col-xs-8">
-                        <div style="width:100%;" id="progress2"></div>
-                    </div>
-                    <div class="col-md-1 col-sm-1 col-xs-2 text-xs-center">
-                        <button id="increase2" style="width:100%; max-width:35px;">+</button>
-                    </div>
-                </div>
-                <div class="clearfix"><br /></div>
-                <div class="row">
-                    <div class="col-md-2 col-sm-2 col-xs-12">
-                        <span style="font-size:22px;">Checkin:</span>
-                    </div>
-                    <div class="col-md-1 col-sm-1 col-xs-2 text-xs-center">
-                        <button id="decrease3" style="width:100%; max-width:35px;">-</button>
-                    </div>
-                    <div class="col-md-8 col-sm-8 col-xs-8">
-                        <div style="width:100%;" id="progress3"></div>
-                    </div>
-                    <div class="col-md-1 col-sm-1 col-xs-2 text-xs-center">
-                        <button id="increase3" style="width:100%; max-width:35px;">+</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- you need to include the shieldui css and js assets in order for the components to work -->
-<link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light-bootstrap/all.min.css" />
-<script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
-
-<script type="text/javascript">
-    jQuery(function ($) {
-        $('#rate1').shieldRating({
-            max: 7,
-            step: 0.1,
-            value: 0,
-            markPreset: false
-        });
-
-        $('#rate2').shieldRating({
-            max: 7,
-            step: 0.1,
-            value: 0,
-            markPreset: false
-        });
-
-        $('#rate3').shieldRating({
-            max: 7,
-            step: 0.1,
-            value: 0,
-            markPreset: false
-        });
-
-        var progress1 = $("#progress1").shieldProgressBar({
-            value: 50,
-            text: {
-                enabled: true,
-                template: "{0} %"
-            }
-        }).swidget();
-
-        var progress2 = $("#progress2").shieldProgressBar({
-            value: 50,
-            text: {
-                enabled: true,
-                template: "{0} %"
-            }
-        }).swidget();
-
-        var progress3 = $("#progress3").shieldProgressBar({
-            value: 50,
-            text: {
-                enabled: true,
-                template: "{0} %"
-            }
-        }).swidget();
-
-
-        $("#increase1").shieldButton({
-            events: {
-                click: function () {
-                    progress1.value(progress1.value() + 10);
+                            <div class="col">
+                                <input class="form-control mb-3" type="input" name="option1[]" id="" placeholder="Option 1" required>
+                            </div>
+                            <div class="col">
+                                <input class="form-control mb-3" type="input" name="option2[]" id="" placeholder="Option 2" required>
+                            </div>
+                            <div class="col">
+                                <input class="form-control mb-3" type="input" name="option3[]" id="" placeholder="Option 3" required>
+                            </div>
+                            <div class="col">
+                                <input class="form-control mb-3" type="input" name="option4[]" id="" placeholder="Option 4" required>
+                            </div>
+                            <div class="col">
+                                <input class="form-control mb-3" type="input" name="answer[]" id="" placeholder="Answer: Option 1/2/3/4" required>
+                            </div>
+                        </div>
+                    </div><br><br>
+                <?php
                 }
-            }
-        });
-        $("#decrease1").shieldButton({
-            events: {
-                click: function () {
-                    progress1.value(progress1.value() - 10);
-                }
-            }
-        });
-
-        $("#increase2").shieldButton({
-            events: {
-                click: function () {
-                    progress2.value(progress2.value() + 10);
-                }
-            }
-        });
-        $("#decrease2").shieldButton({
-            events: {
-                click: function () {
-                    progress2.value(progress2.value() - 10);
-                }
-            }
-        });
-
-        $("#increase3").shieldButton({
-            events: {
-                click: function () {
-                    progress3.value(progress3.value() + 10);
-                }
-            }
-        });
-        $("#decrease3").shieldButton({
-            events: {
-                click: function () {
-                    progress3.value(progress3.value() - 10);
-                }
-            }
-        });
-    });
-</script>
-
-<style>
-    .slider {
-        width: 100%;
-    }
-</style>
-
-
-
-            </div>
+                ?>
+                <div class="container mb-5">
+                    <div class="row justify-content-md-center">
+                        <div class="col">
+                            <input type="submit" class="btn btn-danger mt-3" name="btn_submit_questionnaire" value="Submit Questionnaire" form="form1">
+                        </div>
+                    </div>
+                </div>
+            </form>
         </main>
 
         <footer class="mt-auto text-white-50">
@@ -292,7 +149,8 @@ include("config.php");
         </footer>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/sweetalert.min.js"></script>
 </body>
