@@ -2,6 +2,11 @@
 include("config.php");
 session_start();
 
+if (isset($_POST['btnsearch'])) {
+    $_SESSION['search_question_paper'] = $_POST['search_question_paper'];
+    header('location: view_questionnaire_teacher.php');
+}
+
 if (isset($_POST['btnsubmit'])) {
     $subjectname = $_POST['select_subject'];
     $sql1 = "SELECT * From subjects WHERE subject_name = '$subjectname' ";
@@ -78,13 +83,26 @@ if (isset($_POST['btncreatequsetion'])) {
         </header>
 
         <main>
-            <div class="container mt-5">
+            <div class="container mt-1">
+
+                <form action="#" method="POST">
+                    <div class="row justify-content-md-center">
+                        <div class="col-md-4">
+                            <label for="search_question_paper">
+                                <h5 class="text-warning border border-warning rounded p-2">Search by Question Paper Code</h5>
+                            </label>
+                            <input type="text" class="form-control w-75 m-auto" name="search_question_paper" placeholder="Please input questionnaire code" required><br>
+                            <input class="btn btn-outline-info" type="submit" value="VIEW QUESTIONNAIRE" name="btnsearch">
+                        </div>
+                    </div><br>
+                </form>
+
                 <form action="#" method="POST">
 
                     <div class="row justify-content-md-center">
                         <div class="col-md-4">
                             <label for="select_subject">
-                                <h5>Select Subject to Create Questionnaire</h5>
+                                <h5 class="text-warning border border-warning rounded p-2">Select Subject to Create Questionnaire</h5>
                             </label>
                             <select class="form-control" name="select_subject" required>
                                 <option value="" selected disabled>Please Select Subject</option>
@@ -96,7 +114,7 @@ if (isset($_POST['btncreatequsetion'])) {
                                 }
                                 ?>
                             </select><br>
-                            <input class="btn btn-success" type="submit" value="GET CODE" name="btnsubmit">
+                            <input class="btn btn-outline-info" type="submit" value="GET CODE" name="btnsubmit">
                         </div>
                     </div><br>
 
@@ -109,7 +127,7 @@ if (isset($_POST['btncreatequsetion'])) {
                     <div class="row justify-content-md-center">
                         <div class="col-md-2">
                             <label for="subject_code">
-                                <h5>Subject Code</h5>
+                                <h5 class="text-warning border border-warning rounded p-2">Subject Code</h5>
                             </label>
                             <input class="form-control text-center" type="text" value="<?php echo $subjectcode; ?>" name="subject_code" disabled>
                         </div>
@@ -121,9 +139,9 @@ if (isset($_POST['btncreatequsetion'])) {
                     <?php if ($permission == 1) { ?>
                         <br>
                         <div class="row justify-content-md-center">
-                            <div class="col-md-6">
+                            <div class="col-md-6 mb-5">
                                 <label for="questionnumber">
-                                    <h5>Input how many question will be in Questionnaire</h5>
+                                    <h5>Input how many questions will be in Questionnaire</h5>
                                 </label>
                                 <input type="text" class="form-control w-25 m-auto" name="questionnumber" required><br>
                                 <input class="btn btn-danger" type="submit" value="Create Questionnaire" name="btncreatequsetion">

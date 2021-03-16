@@ -5,6 +5,7 @@ session_start();
 $totalquestions = $_SESSION['questionnumber'];
 $subject_code = $_SESSION['code'];
 $question_paper_id = $_SESSION['question_paper_id'];
+$counter = 0;
 
 $sql1 = "SELECT * FROM subjects WHERE subject_code = '$subject_code' LIMIT 1";
 $result1 = mysqli_query($db, $sql1);
@@ -15,13 +16,10 @@ if (isset($_POST['btn_submit_questionnaire'])) {
 
     $question = $_POST['question'];
     $answer = $_POST['answer'];
-    $countloop = count($question);
-    $option1 = $_POST['option1'];
-    $option2 = $_POST['option2'];
-    $option3 = $_POST['option3'];
-    $option4 = $_POST['option4'];
+    $option = $_POST['option'];
 
-    for ($i = 0; $i < $countloop; $i++) {
+
+    for ($i = 0; $i < $totalquestions; $i++) {
         $send_question = $question[$i];
         $send_answer = $answer[$i];
         $query = "INSERT INTO questionnaire (question_paper_id, question, answer) VALUES ('$question_paper_id', '$send_question', '$send_answer')";
@@ -32,12 +30,12 @@ if (isset($_POST['btn_submit_questionnaire'])) {
         $row2 = mysqli_fetch_array($result2);
         $question_id = $row2['id'];
 
-        $send_option1 = $option1[$i];
-        $send_option2 = $option2[$i];
-        $send_option3 = $option3[$i];
-        $send_option4 = $option4[$i];
-        $query1 = "INSERT INTO question_options (question_id, option_1, option_2, option_3, option_4) VALUES ('$question_id', '$send_option1', '$send_option2', '$send_option3', '$send_option4')";
-        mysqli_query($db, $query1);
+        for ($j = 0; $j < 4; $j++) {
+            $send_option = $option[$counter];
+            $query1 = "INSERT INTO question_options (question_id, option) VALUES ('$question_id', '$send_option')";
+            mysqli_query($db, $query1);
+            $counter++;
+        }
     }
     $_SESSION['questionnaire_status'] = "created";
     $_SESSION['question_paper_id_show'] = $question_paper_id;
@@ -100,34 +98,33 @@ if (isset($_POST['btn_submit_questionnaire'])) {
             <form action="" method="POST" id="form1">
                 <h3 class="justify-content-md-center">Make Qustionnaire for <?php echo $row1['subject_name']; ?></h3>
                 <?php
-                $counter = 0;
-                for ($i = 0; $totalquestions > $i; $i++) { ?>
+                for ($i = 0; $i < $_SESSION['questionnumber']; $i++) { ?>
                     <div class="container border border-info rounded">
                         <div class="row">
                             <div class="col"><br>
                                 <label for="textarea" class="bg-success p-2 rounded">
-                                    <h4>Question: <?php echo ++$counter; ?></h4>
+                                    <h4>Question: <?php echo $k = $i + 1; ?></h4>
                                 </label><br> <br>
                                 <textarea type="text" class="form-control" name="question[]" placeholder="Type question here..." required></textarea><br>
                             </div>
                         </div>
 
                         <div class="row">
-
+                            <?php
+                            for ($j = 1; $j <= 4; $j++) { ?>
+                                <div class="col">
+                                    <input class="form-control mb-3" type="input" name="option[]" id="" placeholder="Option <?php echo $j ?>" required>
+                                </div><?php
+                                    }
+                                        ?>
                             <div class="col">
-                                <input class="form-control mb-3" type="input" name="option1[]" id="" placeholder="Option 1" required>
-                            </div>
-                            <div class="col">
-                                <input class="form-control mb-3" type="input" name="option2[]" id="" placeholder="Option 2" required>
-                            </div>
-                            <div class="col">
-                                <input class="form-control mb-3" type="input" name="option3[]" id="" placeholder="Option 3" required>
-                            </div>
-                            <div class="col">
-                                <input class="form-control mb-3" type="input" name="option4[]" id="" placeholder="Option 4" required>
-                            </div>
-                            <div class="col">
-                                <input class="form-control mb-3" type="input" name="answer[]" id="" placeholder="Answer: Option 1/2/3/4" required>
+                                <select class="form-control" name="answer[]" required>
+                                    <option value="" selected disabled>Please Select Answer</option>
+                                    <option value="1">Option 1</option>
+                                    <option value="2">Option 2</option>
+                                    <option value="3">Option 3</option>
+                                    <option value="4">Option 4</option>
+                                </select>
                             </div>
                         </div>
                     </div><br><br>
