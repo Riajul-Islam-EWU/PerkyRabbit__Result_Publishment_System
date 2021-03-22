@@ -18,28 +18,30 @@ if (isset($_POST['btn_submit_questionnaire'])) {
     $answer = $_POST['answer'];
     $option = $_POST['option'];
 
-
     for ($i = 0; $i < $totalquestions; $i++) {
         $send_question = $question[$i];
         $send_answer = $answer[$i];
-        $query = "INSERT INTO questionnaire (question_paper_id, question, answer) VALUES ('$question_paper_id', '$send_question', '$send_answer')";
+        $query = "INSERT INTO questionnaire (question_paper_id, question) VALUES ('$question_paper_id', '$send_question')";
         mysqli_query($db, $query);
 
-        $sql2 = "SELECT * FROM questionnaire WHERE question = '$send_question' LIMIT 1";
-        $result2 = mysqli_query($db, $sql2);
-        $row2 = mysqli_fetch_array($result2);
-        $question_id = $row2['id'];
+        $question_id = mysqli_insert_id($db);
 
         for ($j = 0; $j < 4; $j++) {
             $send_option = $option[$counter];
             $query1 = "INSERT INTO question_options (question_id, option) VALUES ('$question_id', '$send_option')";
             mysqli_query($db, $query1);
+            if ($send_answer - 1 == $j) {
+                $dynamic_answer = mysqli_insert_id($db);
+                $query2 = "UPDATE questionnaire SET answer = '$dynamic_answer' WHERE id = '$question_id'";
+                mysqli_query($db, $query2);
+            }
             $counter++;
         }
     }
     $_SESSION['questionnaire_status'] = "created";
     $_SESSION['question_paper_id_show'] = $question_paper_id;
-    header("Location: manage_questionnaire.php");
+    $_SESSION['search_question_paper'] = $question_paper_id;
+    header("Location: view_questionnaire_teacher.php");
 }
 ?>
 
@@ -50,7 +52,7 @@ if (isset($_POST['btn_submit_questionnaire'])) {
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RPS - Questionnaire </title>
+    <title>RPS - Questionnaire</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">

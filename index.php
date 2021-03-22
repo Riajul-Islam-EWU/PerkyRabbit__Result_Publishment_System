@@ -107,9 +107,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             swal("SIGN UP COMPLETE!", "Please LOG IN Now!", "success");
         </script>
     <?php
-
     }
-
     ?>
 </body>
 

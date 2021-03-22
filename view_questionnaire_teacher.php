@@ -2,7 +2,7 @@
 include("config.php");
 session_start();
 
-$value = 0;
+$value_question = 0;
 
 $search_id = $_SESSION['search_question_paper'];
 
@@ -39,7 +39,7 @@ if (mysqli_num_rows($result3) > 0) {
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RPS - View Questionnaire </title>
+    <title>RPS - View Questionnaire</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -83,7 +83,7 @@ if (mysqli_num_rows($result3) > 0) {
             </div>
         </header>
 
-        <main>
+        <main class="mb-5">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-md-5 border border-warning rounded p-2">
@@ -100,7 +100,7 @@ if (mysqli_num_rows($result3) > 0) {
                 <br>
                 <div class="container mb-3">
                     <div class="row justify-content-md-center">
-                        <?php echo "<h5 class=" . '"col-md-2 border border-info rounded"> Question No: ' . $value . "</h5>"; ?>
+                        <?php echo "<h5 class=" . '"col-md-2 border border-info rounded"> Question No: ' . $value_question = $i + 1 . "</h5>"; ?>
                     </div>
                 </div>
                 <div class="container border border-info rounded">
@@ -111,27 +111,34 @@ if (mysqli_num_rows($result3) > 0) {
                             $sql_question_id = $question_id[$i];
                             $sql4 = "SELECT * FROM question_options WHERE question_id = '$sql_question_id'";
                             $result4 = mysqli_query($db, $sql4);
-
                             ?>
+                            
                             <div class="row">
                                 <?php
                                 if (mysqli_num_rows($result4) > 0) {
+                                    $value_option = 1;
                                     while ($row4 = mysqli_fetch_assoc($result4)) {
                                         $option = $row4['option'];
                                 ?>
-                                        <div class="col border border-success rounded m-1">Option <?php echo ": " . $value . " " . $option; ?></div>
+                                        <div class="col border border-success rounded m-1"><?php echo "Option " . $value_option++ . ": " . $option; ?></div>
                                 <?php
                                     }
                                 }
                                 ?>
-                                <div class="col border border-danger rounded m-1"> Answer: <?php echo $answer[$i]; ?></div>
+                                <div class="col border border-danger rounded m-1">
+                                Answer: <?php $show_ans = $answer[$i];
+                                $sql4 = "SELECT * FROM question_options WHERE id = '$show_ans' LIMIT 1";
+                                $result4 = mysqli_query($db, $sql4);
+                                $row4 = mysqli_fetch_array($result4);
+                                echo $row4['option'];
+                                ?></div>
                             </div>
                         </div>
                     </div>
                 </div><?php
                     }
+                    $value++;
                         ?>
-
         </main>
 
         <footer class="mt-auto mb-3 text-white-50">
@@ -143,6 +150,17 @@ if (mysqli_num_rows($result3) > 0) {
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/sweetalert.min.js"></script>
+    <?php
+    if (isset($_SESSION['questionnaire_status']) && $_SESSION['questionnaire_status'] == "created") {
+        $question_paper_id_show = $_SESSION['question_paper_id_show'];
+    ?>
+        <script>
+            swal("Questionnaire Created!", "Questionnaire Code: <?php echo $question_paper_id_show ?>", "success");
+        </script>
+    <?php
+        unset($_SESSION['questionnaire_status']);
+    }
+    ?>
 </body>
 
 </html>

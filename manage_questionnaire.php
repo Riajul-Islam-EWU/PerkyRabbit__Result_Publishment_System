@@ -39,7 +39,7 @@ if (isset($_POST['btncreatequsetion'])) {
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RPS - Manage Questionnaire </title>
+    <title>RPS - Manage Questionnaire</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -162,18 +162,6 @@ if (isset($_POST['btncreatequsetion'])) {
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/sweetalert.min.js"></script>
-
-    <?php
-    if (isset($_SESSION['questionnaire_status']) && $_SESSION['questionnaire_status'] == "created") {
-        $question_paper_id_show = $_SESSION['question_paper_id_show'];
-    ?>
-        <script>
-            swal("Questionnaire Created!", "Questionnaire Code: <?php echo $question_paper_id_show ?>", "success");
-        </script>
-    <?php
-        unset($_SESSION['questionnaire_status']);
-    }
-    ?>
 </body>
 
 </html>

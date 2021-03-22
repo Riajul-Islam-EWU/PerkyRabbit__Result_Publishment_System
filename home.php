@@ -65,8 +65,10 @@ $test3 = "student";
                         echo '<a class="nav-link" href="manage_questionnaire.php">Manage Questionnaire</a>';
                     } else {
                         echo '<a class="nav-link" href="profile.php">Profile</a>';
+                        echo '<a class="nav-link" href="select_question_paper.php">Give Exam</a>';
                     }
                     ?>
+                    <a class="nav-link" aria-current="page" href="result_board.php">Online Result</a>
                     <a class="nav-link" href="logout.php">LOG OUT</a>
                 </nav>
             </div>
@@ -82,6 +84,10 @@ $test3 = "student";
         </footer>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/sweetalert.min.js"></script>
 </body>
 
 </html>
